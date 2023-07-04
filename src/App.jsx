@@ -1,14 +1,11 @@
-import {useEffect, useState} from "react";
 import Products from "./components/Products.jsx";
 
 function App() {
-
     return (
         <>
-           <Products/>
-
+            <Products />
         </>
-    )
+    );
 }
 
-export default App
+export default App;
