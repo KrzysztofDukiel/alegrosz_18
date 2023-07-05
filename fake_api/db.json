@@ -69,13 +69,6 @@
       "description": "Wydajny router WiFi o duzym zasięgu.",
       "price": 79.99,
       "stockCount": 9
-    },
-    {
-      "name": "ziemniaki",
-      "description": "Śmireć i nie dowierzanie",
-      "price": "35",
-      "stockCount": "11",
-      "id": 13
     }
   ]
 }

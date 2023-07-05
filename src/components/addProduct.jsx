@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import product from "./Product.jsx";
 
 function AddProduct() {
     const [name, setName] = useState("");
@@ -75,6 +76,7 @@ function AddProduct() {
                     />
                 </div>
                 <button type="submit">Add product</button>
+
                 <Link to="/">Back</Link>
             </form>
         </div>

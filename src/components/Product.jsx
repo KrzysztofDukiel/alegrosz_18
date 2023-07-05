@@ -30,6 +30,7 @@ function Product() {
         await deleteProduct(productId);
         navigate("/"); //zwraca z powrotem na główną strone
     }
+
     if (!product) {
         return <h2>Loader...</h2>;
     }
@@ -40,6 +41,18 @@ function Product() {
             <p>{product.description}</p>
             <p>${product.price}</p>
             <button onClick={handleDelete}>Delete Product</button>
+            <button>Update</button>
+            <br />
+            <Link
+                style={{
+                    padding: "10px",
+                    margin: "10px",
+                    textDecoration: "none",
+                }}
+                to={`/edit-product/${product.id}`}
+            >
+                Edit
+            </Link>
             <br />
             <Link to="/">Back</Link>
         </div>
