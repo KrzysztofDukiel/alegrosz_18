@@ -1,9 +1,10 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Product() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+    const navigate = useNavigate();
     useEffect(() => {
         const controller = new AbortController();
         getProduct(productId, controller.signal).then((data) =>
@@ -19,14 +20,27 @@ function Product() {
         );
     }
 
+    async function deleteProduct(id) {
+        return await fetch(`http://localhost:3000/products/${id}`, {
+            method: "delete",
+        });
+    }
+
+    async function handleDelete() {
+        await deleteProduct(productId);
+        navigate("/"); //zwraca z powrotem na główną strone
+    }
     if (!product) {
         return <h2>Loader...</h2>;
     }
+
     return (
         <div>
             <h1>{product.name}</h1>
             <p>{product.description}</p>
             <p>${product.price}</p>
+            <button onClick={handleDelete}>Delete Product</button>
+            <br />
             <Link to="/">Back</Link>
         </div>
     );
