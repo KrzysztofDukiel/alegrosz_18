@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import ProductCard from "./ProductCard.jsx";
+import { Box } from "@mui/material";
+
 function Products() {
     const [products, setProducts] = useState([]);
+
     useEffect(() => {
         const controller = new AbortController();
         getData(controller.signal).then((data) => setProducts(data));
+
         return () => {
             controller.abort();
         };
@@ -15,24 +20,25 @@ function Products() {
             (response) => response.json()
         );
     }
-
     return (
         <>
-            {products.map((product) => (
-                <div
-                    key={product.id}
-                    style={{
-                        border: "1px solid black",
-                        padding: 10,
-                        margin: 10,
-                    }}
-                >
-                    <h2>{product.name}</h2>
-
-                    <p>${product.price}</p>
-                    <Link to={`/product/${product.id}`}>details</Link>
-                </div>
-            ))}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 3,
+                    justifyContent: "center",
+                }}
+            >
+                {products.map((product) => (
+                    <ProductCard
+                        name={product.name}
+                        price={product.price}
+                        key={product.id}
+                        id={product.id}
+                    />
+                ))}
+            </Box>
         </>
     );
 }

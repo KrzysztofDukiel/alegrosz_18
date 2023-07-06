@@ -1,46 +1,52 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import { Grid, TextField } from "@mui/material";
+import Button from "@mui/material/Button";
 
 function EditProduct() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+
     const navigate = useNavigate();
+
     useEffect(() => {
         const controller = new AbortController();
+        getProduct(productId, controller.signal).then((data) =>
+            setProduct(data)
+        );
+
         return () => {
-            getProduct(productId, controller.signal).then((data) =>
-                setProduct(data)
-            );
-            return () => {
-                controller.abort();
-            };
+            controller.abort();
         };
     }, [productId]);
 
     async function getProduct(id, signal) {
-        const response = await fetch(
-            `http://localhost3000/product/${id}`,
-            signal
-        );
-        return response.json();
-    }
-
-    if (!product) {
-        return <h2>Loader...</h2>;
-    }
-    function handleUptadeInputs(event) {
-        setProduct({ ...product, [event.target.name]: event.target.value });
-    }
-    async function editProduct(id, data) {
-        const response = await fetch(`http://localhost3000/products/${id}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json",
-            },
+        const response = await fetch(`http://localhost:3000/products/${id}`, {
+            signal,
         });
         return response.json();
     }
+
+    function handleUpdateInputs(event) {
+        setProduct({
+            ...product,
+            [event.target.name]: event.target.value,
+        });
+    }
+
+    async function editProduct(id, data) {
+        const response = await fetch(`http://localhost:3000/products/${id}`, {
+            method: "put",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        return response.json();
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         editProduct(productId, product).then(() => {
@@ -48,54 +54,79 @@ function EditProduct() {
         });
     }
 
+    if (!product) {
+        return <h2>Loader...</h2>;
+    }
+
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <h1>Edit product: </h1>
+        <Grid item xs={12} md={8}>
+            <Typography sx={{ mb: 3 }} variant="h2" component="h1">
+                Edit product: {product.name}
+            </Typography>
+            <form
+                onSubmit={handleSubmit}
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 15,
+                }}
+            >
                 <div>
-                    <label htmlFor="name">Name:</label>
-                    <input
-                        type="text"
-                        name="name"
+                    <TextField
                         id="name"
+                        name="name"
+                        label="Name"
+                        variant="filled"
+                        fullWidth
                         value={product.name}
-                        onChange={handleUptadeInputs}
+                        onChange={handleUpdateInputs}
                     />
                 </div>
                 <div>
-                    <label htmlFor="description">Descriptoio:</label>
-                    <textarea
-                        name="description"
+                    <TextField
                         id="description"
-                        cols="30"
-                        rows="10"
+                        name="description"
+                        label="Description"
+                        variant="filled"
+                        fullWidth
                         value={product.description}
-                        onChange={handleUptadeInputs}
-                    ></textarea>
+                        onChange={handleUpdateInputs}
+                        multiline
+                    />
                 </div>
                 <div>
-                    <label htmlFor="price">Price</label>
-                    <input
-                        type="number"
-                        name="price"
+                    <TextField
                         id="price"
+                        name="price"
+                        label="Price"
+                        variant="filled"
+                        fullWidth
                         value={product.price}
-                        onChange={handleUptadeInputs}
+                        onChange={handleUpdateInputs}
+                        type="number"
                     />
                 </div>
                 <div>
-                    <label htmlFor="stockCount">Stock Count: </label>
-                    <input
-                        type="number"
-                        name="stockCount"
+                    <TextField
                         id="stockCount"
+                        name="stockCount"
+                        label="Stock count"
+                        variant="filled"
+                        fullWidth
                         value={product.stockCount}
-                        onChange={handleUptadeInputs}
+                        onChange={handleUpdateInputs}
+                        type="number"
                     />
                 </div>
-                <button type="submit">save</button>
+                <Button
+                    sx={{ alignSelf: "flex-end" }}
+                    variant="contained"
+                    type="submit"
+                >
+                    Save
+                </Button>
             </form>
-        </div>
+        </Grid>
     );
 }
 

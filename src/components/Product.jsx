@@ -1,19 +1,24 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import Typography from "@mui/material/Typography";
 
 function Product() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+
     const navigate = useNavigate();
+
     useEffect(() => {
         const controller = new AbortController();
         getProduct(productId, controller.signal).then((data) =>
             setProduct(data)
         );
+
         return () => {
             controller.abort();
         };
     }, [productId]);
+
     function getProduct(id, signal) {
         return fetch(`http://localhost:3000/products/${id}`, { signal }).then(
             (response) => response.json()
@@ -28,32 +33,29 @@ function Product() {
 
     async function handleDelete() {
         await deleteProduct(productId);
-        navigate("/"); //zwraca z powrotem na główną strone
+        navigate("/");
     }
 
     if (!product) {
-        return <h2>Loader...</h2>;
+        return <h2>Loader.....</h2>;
     }
 
     return (
         <div>
-            <h1>{product.name}</h1>
+            <Typography variant="h2" component="h1">
+                {product.name}
+            </Typography>
+
             <p>{product.description}</p>
-            <p>${product.price}</p>
+            <span>Price ${product.price}</span>
+            <br />
             <button onClick={handleDelete}>Delete Product</button>
-            <button>Update</button>
-            <br />
             <Link
-                style={{
-                    padding: "10px",
-                    margin: "10px",
-                    textDecoration: "none",
-                }}
-                to={`/edit-product/${product.id}`}
+                style={{ padding: 10, margin: 10, display: "inline-block" }}
+                to={`/edit-product/${productId}`}
             >
-                Edit
+                Edit {product.name}
             </Link>
-            <br />
             <Link to="/">Back</Link>
         </div>
     );
