@@ -1,13 +1,6 @@
 {
   "products": [
     {
-      "id": 1,
-      "name": "Smartfon XYZ",
-      "description": "Najnowszy smartfon z zaawansowanymi funkcjami.",
-      "price": 999.99,
-      "stockCount": 10
-    },
-    {
       "id": 2,
       "name": "Telewizor LED",
       "description": "Duży telewizor LED o wysokiej rozdzielczości.",
